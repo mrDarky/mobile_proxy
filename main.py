@@ -12,6 +12,44 @@ if len(sys.argv) > 1 and sys.argv[1] == '--cli':
     sys.exit(cli_main())
 
 import os
+
+# Suppress clipboard provider errors (xsel/xclip) on systems without them
+# Kivy will automatically fall back to sdl2 clipboard which works cross-platform
+original_stderr = sys.stderr
+
+class ClipboardErrorFilter:
+    """Filter to suppress xsel/xclip FileNotFoundError messages"""
+    def __init__(self, original_stderr):
+        self.original = original_stderr
+        self.filtering = False
+        
+    def write(self, text):
+        # Detect start of xsel/xclip error messages
+        if 'xsel - FileNotFoundError' in text or 'xclip - FileNotFoundError' in text:
+            self.filtering = True
+            return len(text)
+        
+        # Continue filtering if we're in an error block
+        if self.filtering:
+            # Stop filtering when we see a new log line that's not part of the error
+            if text.startswith('[') or (text.strip() and not text.startswith(' ')):
+                self.filtering = False
+                # Continue to write this line since it's not part of the error
+            else:
+                # Still filtering, skip this line
+                return len(text)
+        
+        # Write non-filtered content
+        return self.original.write(text)
+    
+    def flush(self):
+        self.original.flush()
+    
+    def isatty(self):
+        return self.original.isatty()
+
+# Apply the filter before importing Kivy
+sys.stderr = ClipboardErrorFilter(original_stderr)
 from kivymd.app import MDApp
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.button import MDRaisedButton, MDFlatButton
