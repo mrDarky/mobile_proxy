@@ -24,6 +24,18 @@ A cross-platform application built with Python and Kivy for creating proxy conne
 3. **USB Debugging** enabled on your Android device
 4. **Every Proxy** app installed on your Android device (for proxy functionality)
 
+### Optional Dependencies
+
+For Linux users, clipboard support in the GUI can be enhanced by installing clipboard tools:
+```bash
+# Ubuntu/Debian
+sudo apt-get install xsel xclip
+
+# Fedora/RHEL
+sudo dnf install xsel xclip
+```
+Note: The application works perfectly without these tools, as it falls back to SDL2 clipboard support.
+
 ## Installation
 
 1. Clone this repository:
