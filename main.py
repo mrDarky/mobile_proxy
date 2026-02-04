@@ -12,11 +12,11 @@ if len(sys.argv) > 1 and sys.argv[1] == '--cli':
     sys.exit(cli_main())
 
 import os
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.popup import Popup
+from kivymd.uix.button import MDRaisedButton, MDFlatButton
+from kivymd.uix.label import MDLabel
+from kivymd.uix.dialog import MDDialog
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from kivy.properties import StringProperty, NumericProperty
@@ -127,8 +127,11 @@ class MainLayout(BoxLayout):
         devices = self.db.get_devices()
         
         if not devices:
-            label = Label(
+            label = MDLabel(
                 text='No devices connected.\nConnect a device via USB and enable USB debugging.',
+                halign='center',
+                theme_text_color='Custom',
+                text_color=(0.6, 0.6, 0.6, 1),
                 size_hint_y=None,
                 height=100
             )
@@ -162,8 +165,11 @@ class MainLayout(BoxLayout):
         connections = self.db.get_connections()
         
         if not connections:
-            label = Label(
+            label = MDLabel(
                 text='No connections configured.\nAdd a connection from a device.',
+                halign='center',
+                theme_text_color='Custom',
+                text_color=(0.6, 0.6, 0.6, 1),
                 size_hint_y=None,
                 height=100
             )
@@ -192,9 +198,14 @@ class MainLayout(BoxLayout):
     
     def show_add_connection_dialog(self, device_id, serial):
         """Show dialog to add a new connection"""
-        content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        content = BoxLayout(orientation='vertical', spacing=10, padding=20, size_hint_y=None)
+        content.height = 200
         
-        content.add_widget(Label(text=f'Add connection for device: {serial}'))
+        content.add_widget(MDLabel(
+            text=f'Add connection for device: {serial}',
+            theme_text_color='Custom',
+            text_color=(1, 1, 1, 1)
+        ))
         
         local_port_input = TextInput(
             hint_text='Local port (e.g., 8080)',
@@ -212,14 +223,6 @@ class MainLayout(BoxLayout):
         )
         content.add_widget(remote_port_input)
         
-        buttons = BoxLayout(size_hint_y=None, height=50, spacing=10)
-        
-        popup = Popup(
-            title='Add Connection',
-            content=content,
-            size_hint=(0.8, 0.4)
-        )
-        
         def add_connection(instance):
             try:
                 local_port = int(local_port_input.text)
@@ -227,26 +230,32 @@ class MainLayout(BoxLayout):
                 
                 if local_port <= 0 or local_port > 65535 or remote_port <= 0 or remote_port > 65535:
                     self.show_error('Invalid Port', 'Port numbers must be between 1 and 65535')
+                    dialog.dismiss()
                     return
                 
                 conn_id = self.db.add_connection(device_id, local_port, remote_port)
                 
                 if conn_id:
-                    popup.dismiss()
+                    dialog.dismiss()
                     self.refresh_connections()
                 else:
                     self.show_error('Error', 'Failed to add connection. Port may already be in use.')
+                    dialog.dismiss()
             except ValueError:
                 self.show_error('Invalid Input', 'Please enter valid port numbers')
+                dialog.dismiss()
         
-        add_btn = Button(text='Add', on_release=add_connection)
-        cancel_btn = Button(text='Cancel', on_release=popup.dismiss)
+        dialog = MDDialog(
+            title='Add Connection',
+            type='custom',
+            content_cls=content,
+            buttons=[
+                MDFlatButton(text='Cancel', on_release=lambda x: dialog.dismiss()),
+                MDRaisedButton(text='Add', on_release=add_connection),
+            ]
+        )
         
-        buttons.add_widget(add_btn)
-        buttons.add_widget(cancel_btn)
-        content.add_widget(buttons)
-        
-        popup.open()
+        dialog.open()
     
     def toggle_connection(self, connection_item):
         """Toggle a connection on/off"""
@@ -323,41 +332,58 @@ class MainLayout(BoxLayout):
     
     def show_error(self, title, message):
         """Show error popup"""
-        content = BoxLayout(orientation='vertical', padding=10, spacing=10)
-        content.add_widget(Label(text=message))
-        
-        popup = Popup(
-            title=title,
-            content=content,
-            size_hint=(0.8, 0.3)
+        content = MDLabel(
+            text=message,
+            theme_text_color='Custom',
+            text_color=(1, 1, 1, 1),
+            halign='center'
         )
         
-        close_btn = Button(text='Close', size_hint_y=None, height=40, on_release=popup.dismiss)
-        content.add_widget(close_btn)
+        dialog = MDDialog(
+            title=title,
+            type='custom',
+            content_cls=content,
+            buttons=[
+                MDRaisedButton(text='Close', on_release=lambda x: dialog.dismiss())
+            ]
+        )
         
-        popup.open()
+        dialog.open()
     
     def show_info(self, title, message):
         """Show info popup"""
-        content = BoxLayout(orientation='vertical', padding=10, spacing=10)
-        content.add_widget(Label(text=message))
-        
-        popup = Popup(
-            title=title,
-            content=content,
-            size_hint=(0.8, 0.3)
+        content = MDLabel(
+            text=message,
+            theme_text_color='Custom',
+            text_color=(1, 1, 1, 1),
+            halign='center'
         )
         
-        close_btn = Button(text='Close', size_hint_y=None, height=40, on_release=popup.dismiss)
-        content.add_widget(close_btn)
+        dialog = MDDialog(
+            title=title,
+            type='custom',
+            content_cls=content,
+            buttons=[
+                MDRaisedButton(text='Close', on_release=lambda x: dialog.dismiss())
+            ]
+        )
         
-        popup.open()
+        dialog.open()
 
 
-class MobileProxyApp(App):
+class MobileProxyApp(MDApp):
     """Main application class"""
     
     def build(self):
+        from kivy.lang import Builder
+        # Set theme colors
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "Blue"
+        self.theme_cls.accent_palette = "Amber"
+        
+        # Explicitly load the .kv file since class name doesn't match filename
+        Builder.load_file('main.kv')
+        
         self.title = 'Mobile Proxy Manager'
         return MainLayout()
 
