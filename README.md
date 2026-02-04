@@ -56,9 +56,27 @@ python main.py
    - Use **"Check IP"** to verify the device's current IP address
    - Use **"Change IP"** to toggle airplane mode and change the IP address
 
-### CLI Tool
+### Interactive CLI Mode
 
-For headless operation or automation, use the CLI tool:
+For a menu-driven terminal interface without GUI:
+
+```bash
+# Run interactive mode
+python cli.py interactive
+# or
+python cli.py -i
+# or
+python main.py --cli interactive
+```
+
+The interactive CLI provides menus for:
+- **Devices Management**: List, refresh, check IP, change IP, view details
+- **Connections Management**: List, add, start, stop, delete, view details
+- **Quick Actions**: Start/stop all connections, check all IPs, system status
+
+### CLI Tool (Command Mode)
+
+For headless operation or automation, use direct commands:
 
 ```bash
 # List connected devices

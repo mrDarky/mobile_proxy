@@ -41,13 +41,19 @@ try:
     proxy = ProxyManager(adb)
     print("✓ Proxy manager initialized")
     
+    # Test CLI module
+    from cli import InteractiveCLI
+    print("✓ Interactive CLI module imported successfully")
+    
     # Clean up
     if os.path.exists('test_verify.db'):
         os.remove('test_verify.db')
     
     print("\n✅ All tests passed! Application is ready to use.")
     print("\nTo run the application:")
-    print("  python main.py")
+    print("  GUI mode:         python main.py")
+    print("  CLI mode:         python cli.py interactive")
+    print("  CLI command mode: python cli.py [command]")
     print("\nNote: Make sure you have:")
     print("  1. ADB installed and in PATH")
     print("  2. Android device(s) connected via USB")
