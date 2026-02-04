@@ -2,6 +2,15 @@
 Main application for Mobile Proxy Manager
 Cross-platform app for creating proxy connections from mobile devices
 """
+import sys
+
+# Check if CLI mode is requested before importing Kivy
+if len(sys.argv) > 1 and sys.argv[1] == '--cli':
+    # Remove the --cli argument and pass remaining args to cli
+    sys.argv.pop(1)
+    from cli import main as cli_main
+    sys.exit(cli_main())
+
 import os
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -346,4 +355,5 @@ class MobileProxyApp(App):
 
 
 if __name__ == '__main__':
+    # Run GUI mode (CLI mode is handled at the top of the file before Kivy imports)
     MobileProxyApp().run()
