@@ -39,6 +39,8 @@ pip install -r requirements.txt
 
 ## Usage
 
+### GUI Application
+
 1. **Connect your Android device(s)** via USB and ensure USB debugging is enabled
 
 2. **Run the application**:
@@ -53,6 +55,35 @@ python main.py
    - Click **"Start"** to activate the connection
    - Use **"Check IP"** to verify the device's current IP address
    - Use **"Change IP"** to toggle airplane mode and change the IP address
+
+### CLI Tool
+
+For headless operation or automation, use the CLI tool:
+
+```bash
+# List connected devices
+python cli.py list-devices
+
+# Add a connection
+python cli.py add SERIAL_NUMBER LOCAL_PORT REMOTE_PORT
+
+# Start a connection
+python cli.py start CONNECTION_ID
+
+# Check device IP
+python cli.py check-ip SERIAL_NUMBER
+
+# Change device IP
+python cli.py change-ip SERIAL_NUMBER
+
+# Stop a connection
+python cli.py stop CONNECTION_ID
+
+# List all connections
+python cli.py list-connections
+```
+
+For more CLI examples, see `CONFIG_EXAMPLES.md`.
 
 ## Setting up Every Proxy on Android
 
@@ -75,13 +106,17 @@ python main.py
 
 ```
 mobile_proxy/
-├── main.py              # Main application entry point
+├── main.py              # Main GUI application entry point
 ├── main.kv              # Kivy UI layout file
+├── cli.py               # Command-line interface tool
 ├── database.py          # SQLite database management
 ├── adb_manager.py       # ADB device management
 ├── proxy_manager.py     # Proxy connection handling
 ├── requirements.txt     # Python dependencies
-└── README.md           # This file
+├── test_app.py          # Application test script
+├── README.md           # Project documentation
+├── USER_GUIDE.md       # Detailed user guide
+└── CONFIG_EXAMPLES.md  # Configuration examples
 ```
 
 ## Troubleshooting
