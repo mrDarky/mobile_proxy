@@ -33,7 +33,9 @@ def test_xsel_fix():
             if self.filtering:
                 if text.startswith('[') or (text.strip() and not text.startswith(' ')):
                     self.filtering = False
+                    # Continue to write this line since it's not part of the error
                 else:
+                    # Still filtering, skip this line
                     return len(text)
             
             return self.original.write(text)

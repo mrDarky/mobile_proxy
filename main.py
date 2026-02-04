@@ -34,7 +34,9 @@ class ClipboardErrorFilter:
             # Stop filtering when we see a new log line that's not part of the error
             if text.startswith('[') or (text.strip() and not text.startswith(' ')):
                 self.filtering = False
+                # Continue to write this line since it's not part of the error
             else:
+                # Still filtering, skip this line
                 return len(text)
         
         # Write non-filtered content
