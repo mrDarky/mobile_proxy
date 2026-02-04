@@ -97,8 +97,8 @@ class MainLayout(BoxLayout):
                 "Please install Android Debug Bridge (ADB) to use this application."
             ), 0.5)
         
-        # Schedule periodic refresh
-        Clock.schedule_interval(lambda dt: self.refresh_connections(), 10)
+        # Schedule periodic refresh - start after widget tree is built
+        Clock.schedule_once(lambda dt: Clock.schedule_interval(lambda dt: self.refresh_connections(), 10), 0.1)
     
     def refresh_devices(self):
         """Refresh the list of connected devices"""
@@ -117,6 +117,10 @@ class MainLayout(BoxLayout):
     
     def update_device_list(self):
         """Update the device list UI"""
+        # Check if widget is available (KV might not be fully loaded yet)
+        if 'device_list' not in self.ids:
+            return
+        
         device_list = self.ids.device_list
         device_list.clear_widgets()
         
@@ -148,6 +152,10 @@ class MainLayout(BoxLayout):
     
     def update_connection_list(self):
         """Update the connection list UI"""
+        # Check if widget is available (KV might not be fully loaded yet)
+        if 'connection_list' not in self.ids:
+            return
+        
         connection_list = self.ids.connection_list
         connection_list.clear_widgets()
         
