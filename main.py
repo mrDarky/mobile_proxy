@@ -97,8 +97,8 @@ class MainLayout(BoxLayout):
                 "Please install Android Debug Bridge (ADB) to use this application."
             ), 0.5)
         
-        # Schedule periodic refresh - start after widget tree is built
-        Clock.schedule_once(lambda dt: Clock.schedule_interval(lambda dt: self.refresh_connections(), 10), 0.1)
+        # Schedule periodic refresh
+        Clock.schedule_interval(lambda dt: self.refresh_connections(), 10)
     
     def refresh_devices(self):
         """Refresh the list of connected devices"""
