@@ -20,6 +20,7 @@ from kivymd.uix.dialog import MDDialog
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from kivy.properties import StringProperty, NumericProperty
+from kivy.lang import Builder
 
 from database import Database
 from adb_manager import ADBManager
@@ -375,7 +376,6 @@ class MobileProxyApp(MDApp):
     """Main application class"""
     
     def build(self):
-        from kivy.lang import Builder
         # Set theme colors
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Blue"

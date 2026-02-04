@@ -1,10 +1,4 @@
 #:kivy 2.3.0
-#:import MDCard kivymd.uix.card.MDCard
-#:import MDLabel kivymd.uix.label.MDLabel
-#:import MDRaisedButton kivymd.uix.button.MDRaisedButton
-#:import MDFlatButton kivymd.uix.button.MDFlatButton
-#:import MDIconButton kivymd.uix.button.MDIconButton
-#:import MDTopAppBar kivymd.uix.toolbar.MDTopAppBar
 
 <DeviceItem>:
     size_hint_y: None
@@ -144,7 +138,6 @@
         title: 'Mobile Proxy Manager'
         md_bg_color: 0.1, 0.1, 0.15, 1
         elevation: 4
-        left_action_items: [['menu', lambda x: None]]
         right_action_items: [['refresh', lambda x: root.refresh_all()]]
     
     # Action buttons bar
