@@ -117,6 +117,10 @@ class MainLayout(BoxLayout):
     
     def update_device_list(self):
         """Update the device list UI"""
+        # Check if widget is available (KV might not be fully loaded yet)
+        if 'device_list' not in self.ids:
+            return
+        
         device_list = self.ids.device_list
         device_list.clear_widgets()
         
@@ -148,6 +152,10 @@ class MainLayout(BoxLayout):
     
     def update_connection_list(self):
         """Update the connection list UI"""
+        # Check if widget is available (KV might not be fully loaded yet)
+        if 'connection_list' not in self.ids:
+            return
+        
         connection_list = self.ids.connection_list
         connection_list.clear_widgets()
         
